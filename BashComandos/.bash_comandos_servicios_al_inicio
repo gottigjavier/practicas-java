@@ -1,0 +1,47 @@
+Carpeta donde se encuentran los servicios que maneja systemctl:
+
+/lib/systemd/system/
+
+
+Para que no arranque un sevicio al inicio del sistema:
+
+sudo systemctl disable nginx.service
+
+
+Ver estado de un servicio:
+
+sudo systemctl status nginx.service
+
+
+Ver puertos escuchando:
+
+ss -tlnp
+
+Otros servicios parados y sacados del arranque al inicio:
+
+sudo systemctl disable mosquitto.service 
+
+systemctl status mosquitto.service 
+systemctl stop mosquitto.service 
+
+
+systemctl status postgresql
+systemctl stop postgresql
+
+sudo systemctl disable postgresql
+
+
+Para que un servicio arranque al inicio (ejemplo nginx):
+
+sudo systemctl enable nginx.service
+
+
+Para arrancarlo ahora:
+
+
+sudo systemctl start nginx.service
+
+
+
+
+

@@ -1,0 +1,79 @@
+Carpeta donde se encuentran los servicios que maneja systemctl:
+
+/lib/systemd/system/
+
+
+Para que no arranque un sevicio al inicio del sistema, por ejemplo nginx:
+
+sudo systemctl disable nginx.service
+
+
+Ver estado de un servicio:
+
+sudo systemctl status nginx.service
+
+
+Ver puertos escuchando:
+
+ss -tlnp
+
+Otros servicios parados y sacados del arranque al inicio:
+
+sudo systemctl disable mosquitto.service 
+
+systemctl status mosquitto.service 
+systemctl stop mosquitto.service 
+
+
+systemctl status postgresql
+systemctl stop postgresql
+
+sudo systemctl disable postgresql
+
+
+Para que un servicio arranque al inicio (ejemplo nginx):
+
+sudo systemctl enable nginx.service
+
+
+Para arrancarlo ahora:
+
+
+sudo systemctl start nginx.service
+
+
+
+
+----------------------------------------------------------------------------------
+
+Para mysql
+
+Sattus del servicio:
+
+systemctl status mysql.service
+
+
+Para arrancar o parar el servicio:
+
+sudo systemctl start mysql.service        sudo systemctl stop mysql.service
+
+
+Para que no arranque o sí al inicio:
+
+sudo systemctl disable mysql.service      sudo systemctl enable mysql.service 
+
+
+Puede que al estar deshabilitado para arrancar al inicio, al darle start lance un error de que no encuentra una archivo
+Solución:
+
+sudo chmod -R a+rwx /etc/mysql/
+
+sudo chown -R mysql.mysql /etc/mysql/
+
+
+
+
+
+
+
+
