@@ -1,10 +1,6 @@
 
 package productosdb;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-
 /*
 
 1. Una despensa de un barrio desea realizar el alta de sus diferentes productos 
@@ -17,20 +13,11 @@ la correspondiente consulta SQL.
 */
 public class ProductosDB {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         
-        try {
-            
-            Consultas consulta = new Consultas();
-            consulta.consultas();
-            
-        } catch (Exception ex) {
-            Logger.getLogger(ProductosDB.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Consultas consult= new Consultas();
         
+        consult.consultas();
     }
     
 }
