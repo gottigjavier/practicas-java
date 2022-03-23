@@ -15,8 +15,8 @@ import java.util.logging.Logger;
 public class ProductoDAOMysql implements ProductoDAO{
     
     final String INSERT= "INSERT INTO productos (codigo, nombre, marca, precio, stock) VALUES (?, ?, ?, ?, ?)";
-    final String UPDATE = "UPDATE productos SET nombre=? marca=? precio=? stock=? WHERE codigo=?";
-    final String DELETE = "DELETE FROM productos WHERE id=?";
+    final String UPDATE = "UPDATE productos SET nombre=?, marca=?, precio=?, stock=? WHERE codigo=?";
+    final String DELETE = "DELETE FROM productos WHERE codigo=?";
     final String GETALL = "SELECT * FROM productos";
     final String GETONE = "SELECT * FROM productos WHERE codigo=?";
     
@@ -32,7 +32,7 @@ public class ProductoDAOMysql implements ProductoDAO{
     
 
     @Override
-    public void insert(Producto a) throws DAOException {
+    public Producto insert(Producto a) throws DAOException {
         
         PreparedStatement statement = null;
         try {    
@@ -44,6 +44,8 @@ public class ProductoDAOMysql implements ProductoDAO{
             statement.setInt(5, a.getStock());
             if (statement.executeUpdate() == 0){
              throw new DAOException("Error SQL: tal vez no se guardó la información.");   
+            }else{
+                System.out.println("Se ingresó el producto: " + a);
             }
         } catch (SQLException ex) {
             throw new DAOException("Error SQL ", ex);
@@ -56,22 +58,61 @@ public class ProductoDAOMysql implements ProductoDAO{
                 }
             }
         }
+        return a;
     }
 
     @Override
-    public void delete(Producto a) throws DAOException {
+    public void delete(String codigo) {
         PreparedStatement statement = null;
             
         try {
             statement = conn.prepareStatement(DELETE);
-            statement.setString(1, a.getCodigo());
+            statement.setString(1, codigo);
             if (statement.executeUpdate() == 0){
-                throw new DAOException("Tal vez no se borró ese registro");                
+                System.out.println("Tal vez no se borró ese registro. Parece que no existe");                
+            }else{
+                System.out.println("Código " + codigo  + " Borrado!!");
+            }
+        } catch (SQLException ex) {
+            try {
+                throw new DAOException("Error SQL ", ex);
+            } catch (DAOException ex1) {
+                Logger.getLogger(ProductoDAOMysql.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        } finally {
+            if(statement != null){
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    try {
+                        throw new DAOException("Error SQL ", ex);
+                    } catch (DAOException ex1) {
+                        Logger.getLogger(ProductoDAOMysql.class.getName()).log(Level.SEVERE, null, ex1);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public Producto update(Producto a) throws DAOException {
+        PreparedStatement statement = null;
+        try {    
+            statement = conn.prepareStatement(UPDATE);
+            statement.setString(1, a.getNombre());
+            statement.setString(2, a.getMarca());
+            statement.setDouble(3, a.getPrecio());
+            statement.setInt(4, a.getStock());
+            statement.setString(5, a.getCodigo());
+            if (statement.executeUpdate() == 0){
+             throw new DAOException("Error SQL: tal vez no se guardó la información.");   
+            }else{
+                System.out.println("Transacción con DB exitosa");
             }
         } catch (SQLException ex) {
             throw new DAOException("Error SQL ", ex);
         } finally {
-            if(statement != null){
+            if (statement != null){
                 try {
                     statement.close();
                 } catch (SQLException ex) {
@@ -79,24 +120,10 @@ public class ProductoDAOMysql implements ProductoDAO{
                 }
             }
         }
-    }
-
-    @Override
-    public void update(Producto a) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return a;
     }
     
     
-    private Producto convert(ResultSet rs) throws SQLException{
-        String codigo = rs.getString("codigo");
-        String nombre = rs.getString("nombre");
-        String marca = rs.getString("marca");
-        double precio = rs.getDouble("precio");
-        int stock = rs.getInt("stock");
-        Producto producto = new Producto(codigo, nombre, marca, precio, stock);
-        return producto;        
-    }
-
     @Override
     public List<Producto> getAll() throws DAOException {
         PreparedStatement statement = null;
@@ -181,4 +208,13 @@ public class ProductoDAOMysql implements ProductoDAO{
         return producto;
     }
     
+    private Producto convert(ResultSet rs) throws SQLException{
+        String codigo = rs.getString("codigo");
+        String nombre = rs.getString("nombre");
+        String marca = rs.getString("marca");
+        double precio = rs.getDouble("precio");
+        int stock = rs.getInt("stock");
+        Producto producto = new Producto(codigo, nombre, marca, precio, stock);
+        return producto;        
+    }
 }
